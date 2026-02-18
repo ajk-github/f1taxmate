@@ -257,5 +257,5 @@ export async function getPDFAsBase64(pdf: PDFDocument): Promise<string> {
 export async function getPDFAsArrayBuffer(pdf: PDFDocument): Promise<ArrayBuffer> {
   flattenForm(pdf)
   const pdfBytes = await pdf.save()
-  return pdfBytes.buffer
+  return pdfBytes.buffer as ArrayBuffer
 }
