@@ -244,8 +244,9 @@ export function flattenForm(pdf: PDFDocument): void {
 export async function getPDFAsBase64(pdf: PDFDocument): Promise<string> {
   flattenForm(pdf)
   const pdfBytes = await pdf.save()
+  const uint8Array = new Uint8Array(pdfBytes)
   const base64 = btoa(
-    String.fromCharCode(...new Uint8Array(pdfBytes))
+    String.fromCharCode.apply(null, Array.from(uint8Array))
   )
   return base64
 }
