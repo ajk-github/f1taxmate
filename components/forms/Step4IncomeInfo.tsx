@@ -704,7 +704,7 @@ export default function Step4IncomeInfo({
               return
             }
             if (formData.hadUSIncome) {
-              const ssnDigits = getSSNWithoutDashes(formData.ssn)
+              const ssnDigits = getSSNWithoutDashes(formData.ssn || '')
               if (!ssnDigits || ssnDigits.length !== 9) {
                 showFieldError('ssn', 'Please enter a valid 9-digit Social Security Number.')
                 return
