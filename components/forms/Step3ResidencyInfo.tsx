@@ -21,7 +21,7 @@ export default function Step3ResidencyInfo({
   const [formData, setFormData] = useState<ResidencyInfo>({
     dateOfFirstVisit: data?.dateOfFirstVisit ?? '',
     visits:
-      data?.visits?.length > 0
+      data?.visits && data.visits.length > 0
         ? data.visits
         : [{ visaType: 'F1', entryDate: '', exitDate: '' }],
     hasFiledTaxReturnBefore: data?.hasFiledTaxReturnBefore ?? false,
