@@ -4,6 +4,7 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'F1 Tax Filing - Tax Forms for F1 Students',
   description: 'Prepare your tax forms as an F1 student in the USA',
+  viewport: 'width=device-width, initial-scale=1',
 }
 
 export default function RootLayout({

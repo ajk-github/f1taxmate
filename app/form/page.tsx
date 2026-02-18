@@ -199,32 +199,11 @@ export default function FormPage() {
   }
 
   return (
-    <div className="min-h-screen bg-cream py-8 px-4">
-      <div className="max-w-5xl mx-auto flex gap-8">
-        {/* Sticky left: progress + sections (our theme) */}
-        <aside className="shrink-0 pt-2 w-64">
-          <div className="sticky top-8 space-y-4">
-        <ProgressBar currentStep={currentStep} totalSteps={totalSteps} />
-            <p className="text-xs text-slate-600 italic leading-relaxed">
-              Your details never leave your machine. Calculations and form generation happen on your system, no data ever leaves your device.
-            </p>
-            <div className="flex items-center gap-2 pt-1 text-slate-500">
-              <svg className="w-4 h-4 shrink-0 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-              <span className="text-[10px] font-medium uppercase tracking-wider">Processed locally</span>
-            </div>
-            <div className="flex items-center gap-2 pt-1 text-slate-500">
-              <svg className="w-4 h-4 shrink-0 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              <span className="text-[10px] font-medium uppercase tracking-wider">IRS-level safeguards maintained</span>
-            </div>
-          </div>
-        </aside>
-
-        <main className="flex-1 min-w-0">
-        <div className="form-theme-light bg-white rounded-xl border border-slate-200 shadow-lg p-8">
+    <div className="min-h-screen bg-cream py-4 sm:py-8 px-3 sm:px-4">
+      <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-6 md:gap-8">
+        {/* On mobile: form first (order-1), then progress below. On md+: sidebar left. */}
+        <main className="order-1 md:order-2 flex-1 min-w-0 w-full">
+        <div className="form-theme-light bg-white rounded-xl border border-slate-200 shadow-lg p-4 sm:p-6 md:p-8">
           {currentStep === 1 && (
             <Step1PersonalInfo
               data={formData.personalInfo}
@@ -532,6 +511,28 @@ export default function FormPage() {
           )}
         </div>
         </main>
+
+        {/* Sticky left on desktop; below form on mobile */}
+        <aside className="order-2 md:order-1 w-full md:w-64 md:shrink-0 pt-2">
+          <div className="sticky top-4 md:top-8 space-y-4">
+            <ProgressBar currentStep={currentStep} totalSteps={totalSteps} />
+            <p className="text-xs text-slate-600 italic leading-relaxed hidden md:block">
+              Your details never leave your machine. Calculations and form generation happen on your system, no data ever leaves your device.
+            </p>
+            <div className="hidden md:flex items-center gap-2 pt-1 text-slate-500">
+              <svg className="w-4 h-4 shrink-0 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              <span className="text-[10px] font-medium uppercase tracking-wider">Processed locally</span>
+            </div>
+            <div className="hidden md:flex items-center gap-2 pt-1 text-slate-500">
+              <svg className="w-4 h-4 shrink-0 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span className="text-[10px] font-medium uppercase tracking-wider">IRS-level safeguards maintained</span>
+            </div>
+          </div>
+        </aside>
       </div>
     </div>
   )

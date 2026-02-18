@@ -42,17 +42,14 @@ export default function ProgressBar({ currentStep, totalSteps, stepLabels = DEFA
   const percent = totalSteps > 0 ? Math.round((currentStep / totalSteps) * 100) : 0
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 w-64">
-      {/* Progress block: Progress left, percentage + step right, bar below */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-base font-semibold text-brand-dark">Progress</span>
-          <div className="text-right">
-            <div className="text-2xl font-bold text-brand-dark tabular-nums leading-tight">{percent}%</div>
-            <div className="text-sm font-medium text-brand-dark/90 tabular-nums">Step {currentStep} of {totalSteps}</div>
-          </div>
+    <>
+      {/* Mobile: compact horizontal bar + step dots */}
+      <div className="md:hidden bg-white rounded-xl border border-slate-200 shadow-sm p-4 w-full">
+        <div className="flex items-center justify-between gap-3 mb-2">
+          <span className="text-sm font-semibold text-brand-dark tabular-nums">Step {currentStep} of {totalSteps}</span>
+          <span className="text-sm font-medium text-brand-dark/80 tabular-nums">{percent}%</span>
         </div>
-        <div className="h-3 rounded-full bg-slate-200 overflow-hidden">
+        <div className="h-2 rounded-full bg-slate-200 overflow-hidden">
           <div
             className="h-full bg-brand-dark rounded-full transition-all duration-300 ease-out"
             style={{ width: `${percent}%` }}
@@ -63,53 +60,92 @@ export default function ProgressBar({ currentStep, totalSteps, stepLabels = DEFA
             aria-label={`Form progress: ${percent}%`}
           />
         </div>
-      </div>
-
-      {/* Sections */}
-      <div>
-        <span className="text-sm font-semibold text-brand-dark uppercase tracking-wider">Sections</span>
-        <nav className="mt-4 space-y-1" aria-label="Form sections">
+        <div className="flex justify-between mt-2 gap-1" aria-hidden>
           {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => {
             const isActive = step === currentStep
             const isCompleted = step < currentStep
-            const label = labels[step - 1] ?? `Step ${step}`
-            const icon = SECTION_ICONS[step as keyof typeof SECTION_ICONS] ?? null
             return (
-              <div
+              <span
                 key={step}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-colors ${
-                  isActive ? 'bg-brand-accent/15' : ''
+                className={`flex-1 h-1.5 rounded-full transition-colors ${
+                  isActive ? 'bg-brand-dark' : isCompleted ? 'bg-slate-400' : 'bg-slate-200'
                 }`}
-              >
-                <span
-                  className={`shrink-0 flex items-center justify-center w-8 h-8 rounded-full transition-colors ${
-                    isActive
-                      ? 'bg-brand-accent text-brand-dark'
-                      : isCompleted
-                      ? 'bg-slate-200 text-slate-600'
-                      : 'text-slate-400'
-                  }`}
-                >
-                  {isCompleted ? (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  ) : (
-                    icon
-                  )}
-                </span>
-                <span
-                  className={`text-sm font-medium ${
-                    isActive ? 'text-brand-dark' : isCompleted ? 'text-slate-700' : 'text-slate-500'
-                  }`}
-                >
-                  {label}
-                </span>
-              </div>
+                title={labels[step - 1]}
+              />
             )
           })}
-        </nav>
+        </div>
+        <p className="text-xs text-slate-500 mt-2 font-medium">{labels[currentStep - 1] ?? `Step ${currentStep}`}</p>
       </div>
-    </div>
+
+      {/* Desktop: full sidebar with sections list */}
+      <div className="hidden md:block bg-white rounded-2xl border border-slate-200 shadow-sm p-6 w-full max-w-[16rem]">
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-base font-semibold text-brand-dark">Progress</span>
+            <div className="text-right">
+              <div className="text-2xl font-bold text-brand-dark tabular-nums leading-tight">{percent}%</div>
+              <div className="text-sm font-medium text-brand-dark/90 tabular-nums">Step {currentStep} of {totalSteps}</div>
+            </div>
+          </div>
+          <div className="h-3 rounded-full bg-slate-200 overflow-hidden">
+            <div
+              className="h-full bg-brand-dark rounded-full transition-all duration-300 ease-out"
+              style={{ width: `${percent}%` }}
+              role="progressbar"
+              aria-valuenow={percent}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label={`Form progress: ${percent}%`}
+            />
+          </div>
+        </div>
+
+        <div>
+          <span className="text-sm font-semibold text-brand-dark uppercase tracking-wider">Sections</span>
+          <nav className="mt-4 space-y-1" aria-label="Form sections">
+            {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => {
+              const isActive = step === currentStep
+              const isCompleted = step < currentStep
+              const label = labels[step - 1] ?? `Step ${step}`
+              const icon = SECTION_ICONS[step as keyof typeof SECTION_ICONS] ?? null
+              return (
+                <div
+                  key={step}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-colors ${
+                    isActive ? 'bg-brand-accent/15' : ''
+                  }`}
+                >
+                  <span
+                    className={`shrink-0 flex items-center justify-center w-8 h-8 rounded-full transition-colors ${
+                      isActive
+                        ? 'bg-brand-accent text-brand-dark'
+                        : isCompleted
+                        ? 'bg-slate-200 text-slate-600'
+                        : 'text-slate-400'
+                    }`}
+                  >
+                    {isCompleted ? (
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : (
+                      icon
+                    )}
+                  </span>
+                  <span
+                    className={`text-sm font-medium ${
+                      isActive ? 'text-brand-dark' : isCompleted ? 'text-slate-700' : 'text-slate-500'
+                    }`}
+                  >
+                    {label}
+                  </span>
+                </div>
+              )
+            })}
+          </nav>
+        </div>
+      </div>
+    </>
   )
 }
