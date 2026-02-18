@@ -21,7 +21,7 @@ export default function Step4IncomeInfo({
 }: Step4IncomeInfoProps) {
   const [formData, setFormData] = useState<IncomeInfo>({
     hadUSIncome: data?.hadUSIncome ?? false,
-    incomeState: data?.incomeState ?? '',
+    incomeState: data?.incomeState,
     ssn: data?.ssn || '',
     w2Forms: data?.w2Forms || [],
     form1099INT: data?.form1099INT || [],
@@ -249,7 +249,7 @@ export default function Step4IncomeInfo({
                 onChange={(e) => {
                   setFormData({
                     ...formData,
-                    incomeState: e.target.value as 'Illinois' | 'Other',
+                    incomeState: e.target.value ? (e.target.value as 'Illinois' | 'Other') : undefined,
                   })
                   if (errorFieldId === 'incomeState') {
                     setErrorMessage('')
