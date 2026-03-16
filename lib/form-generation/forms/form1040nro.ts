@@ -137,13 +137,14 @@ export async function fillForm1040NRO(formData: FormData): Promise<ArrayBuffer> 
   setTextField(pdf, `${P}.f1_24[0]`, String(days2024))
   setTextField(pdf, `${P}.f1_25[0]`, String(days2025))
 
-  // 36–37: c1_6 — Check Yes
-  setCheckboxField(pdf, `${P}.c1_6[0]`, true)
-  setCheckboxField(pdf, `${P}.c1_6[1]`, false)
+  // 36–37: c1_6 — Previously filed a U.S. tax return? (Yes/No)
+  const residency = formData.residencyInfo
+  const hasFiledBefore = residency?.hasFiledTaxReturnBefore === true
+  setCheckboxField(pdf, `${P}.c1_6[0]`, hasFiledBefore)      // Yes
+  setCheckboxField(pdf, `${P}.c1_6[1]`, !hasFiledBefore)     // No
 
   // 38: Tax year and form filed — e.g. "2024, 1040NR"
-  const residency = formData.residencyInfo
-  if (residency?.hasFiledTaxReturnBefore && residency?.yearFiled && residency?.formUsed) {
+  if (hasFiledBefore && residency?.yearFiled && residency?.formUsed) {
     setTextField(pdf, `${P}.f1_26[0]`, `${residency.yearFiled}, ${residency.formUsed}`)
   }
 
