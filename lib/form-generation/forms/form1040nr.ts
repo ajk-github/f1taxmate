@@ -50,10 +50,16 @@ export async function fillForm1040NR(
   // Field 20: State
   setTextField(pdf, 'topmostSubform[0].Page1[0].f1_20[0]', formData.personalInfo.usAddress.state)
   
-  // Checkbox after field 20: Check "NO"
-  // Need to find the correct checkbox field name - likely c1_X[0] or c1_X[1] for Yes/No
-  // For now, we'll try common checkbox patterns
-  // This will need to be verified with the actual PDF
+  // Filing Status: this app only supports "Other single nonresident alien".
+  // Tick the "Single" filing status checkbox by trying common field names.
+  const filingStatusSingleFieldNames = [
+    'topmostSubform[0].Page1[0].c1_01[0]',
+    'c1_01[0]',
+    'FilingStatus[0]',
+  ]
+  for (const fieldName of filingStatusSingleFieldNames) {
+    setCheckboxField(pdf, fieldName, true)
+  }
   
   // Field 21: Zip Code
   setTextField(pdf, 'topmostSubform[0].Page1[0].f1_21[0]', formData.personalInfo.usAddress.zipCode)

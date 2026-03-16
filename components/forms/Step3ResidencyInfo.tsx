@@ -36,6 +36,13 @@ export default function Step3ResidencyInfo({
   const formDataRef = useRef(formData)
   formDataRef.current = formData
 
+  const formatDateLocal = (date: Date): string => {
+    const year = date.getFullYear()
+    const month = `${date.getMonth() + 1}`.padStart(2, '0')
+    const day = `${date.getDate()}`.padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
   useEffect(() => {
     onUpdate(formData)
   }, [formData, onUpdate])
@@ -43,7 +50,7 @@ export default function Step3ResidencyInfo({
   const handleFirstVisitDateChange = (date: Date | null) => {
     setFirstVisitDate(date)
     if (date) {
-      const formatted = date.toISOString().split('T')[0]
+      const formatted = formatDateLocal(date)
       setFormData((prev) => {
         const updatedVisits =
           prev.visits.length > 0
@@ -68,7 +75,7 @@ export default function Step3ResidencyInfo({
     if (date) {
       updatedVisits[index] = {
         ...updatedVisits[index],
-        [field]: date.toISOString().split('T')[0],
+        [field]: formatDateLocal(date),
       }
     } else {
       updatedVisits[index] = {
