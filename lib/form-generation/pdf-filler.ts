@@ -143,7 +143,8 @@ export function formatCurrencyForPDFWholeOnly(amount: number): string {
 export function formatDateForPDF(dateString: string): string {
   if (!dateString) return ''
   try {
-    const date = new Date(dateString)
+    const date = parseDateLocal(dateString)
+    if (!date) return ''
     const month = String(date.getMonth() + 1).padStart(2, '0')
     const day = String(date.getDate()).padStart(2, '0')
     const year = date.getFullYear()
@@ -153,13 +154,29 @@ export function formatDateForPDF(dateString: string): string {
   }
 }
 
+function parseDateLocal(dateString: string): Date | null {
+  const s = (dateString || '').trim()
+  if (!s) return null
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s)
+  if (m) {
+    const year = Number(m[1])
+    const monthIndex = Number(m[2]) - 1
+    const day = Number(m[3])
+    const d = new Date(year, monthIndex, day)
+    return isNaN(d.getTime()) ? null : d
+  }
+  const d = new Date(s)
+  return isNaN(d.getTime()) ? null : d
+}
+
 /**
  * Format date for forms that use 2-digit year (mm/dd/yy), e.g. 1040-NR-O Line G
  */
 export function formatDateForPDFShortYear(dateString: string): string {
   if (!dateString) return ''
   try {
-    const date = new Date(dateString)
+    const date = parseDateLocal(dateString)
+    if (!date) return ''
     const month = String(date.getMonth() + 1).padStart(2, '0')
     const day = String(date.getDate()).padStart(2, '0')
     const year = String(date.getFullYear()).slice(-2)
@@ -175,7 +192,8 @@ export function formatDateForPDFShortYear(dateString: string): string {
 export function formatDateForPDFDashes(dateString: string): string {
   if (!dateString) return ''
   try {
-    const date = new Date(dateString)
+    const date = parseDateLocal(dateString)
+    if (!date) return ''
     const month = String(date.getMonth() + 1).padStart(2, '0')
     const day = String(date.getDate()).padStart(2, '0')
     const year = date.getFullYear()
@@ -191,7 +209,8 @@ export function formatDateForPDFDashes(dateString: string): string {
 export function extractYear(dateString: string): string {
   if (!dateString) return ''
   try {
-    const date = new Date(dateString)
+    const date = parseDateLocal(dateString)
+    if (!date) return ''
     return String(date.getFullYear())
   } catch {
     return ''

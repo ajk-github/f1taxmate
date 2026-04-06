@@ -121,7 +121,9 @@ export async function fillFormIL1040(
   setTextField(pdf, 'Amount you owe', amountOwed > 0 ? formatCurrencyForPDFWholeOnly(amountOwed) : ZERO)
 
   // Signature area: date (field 65), phone (66 = area code, 67 = number)
-  setTextField(pdf, 'date_2', formatDateForPDFDashes(new Date().toISOString()))
+  const today = new Date()
+  const todayLocal = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+  setTextField(pdf, 'date_2', formatDateForPDFDashes(todayLocal))
   setTextField(pdf, 'DaytimeAreaCode_1', phone.areaCode)
   setTextField(pdf, 'phone_number_1', phone.number)
 

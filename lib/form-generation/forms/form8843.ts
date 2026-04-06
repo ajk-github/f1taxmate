@@ -172,10 +172,9 @@ export async function fillForm8843(
     }
   })
   
-  // Line 8: Check "NO" (Part II - Teachers/Trainees)
-  // c1_1[0] and c1_1[1] are the Yes/No checkboxes for line 8
+  // Line 8 (Part II - Teachers/Trainees): leave blank (do not check Yes/No)
   setCheckboxField(pdf, 'topmostSubform[0].Page1[0].c1_1[0]', false) // Yes
-  setCheckboxField(pdf, 'topmostSubform[0].Page1[0].c1_1[1]', true)  // No - CHECK THIS
+  setCheckboxField(pdf, 'topmostSubform[0].Page1[0].c1_1[1]', false) // No
   
   // Line 12: Check "NO" (Part III - Students)
   // c1_2[0] and c1_2[1] are the Yes/No checkboxes for line 12

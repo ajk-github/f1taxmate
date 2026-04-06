@@ -83,10 +83,12 @@ export default function SuccessPage() {
           issAdvisorContactNumber: '',
           sameAsUniversity: false,
         },
-        residencyInfo: parsedData.residencyInfo || {
-          dateOfFirstVisit: '',
-          visits: [],
-          hasFiledTaxReturnBefore: false,
+        residencyInfo: {
+          dateOfFirstVisit: parsedData.residencyInfo?.dateOfFirstVisit ?? '',
+          visits: parsedData.residencyInfo?.visits ?? [],
+          hasFiledTaxReturnBefore: parsedData.residencyInfo?.hasFiledTaxReturnBefore ?? false,
+          yearFiled: parsedData.residencyInfo?.yearFiled ?? '',
+          formUsed: parsedData.residencyInfo?.formUsed ?? '',
         },
         incomeInfo: parsedData.incomeInfo,
       }
@@ -220,10 +222,12 @@ export default function SuccessPage() {
           issAdvisorContactNumber: '',
           sameAsUniversity: false,
         },
-        residencyInfo: formData.residencyInfo || {
-          dateOfFirstVisit: '',
-          visits: [],
-          hasFiledTaxReturnBefore: false,
+        residencyInfo: {
+          dateOfFirstVisit: formData.residencyInfo?.dateOfFirstVisit ?? '',
+          visits: formData.residencyInfo?.visits ?? [],
+          hasFiledTaxReturnBefore: formData.residencyInfo?.hasFiledTaxReturnBefore ?? false,
+          yearFiled: formData.residencyInfo?.yearFiled ?? '',
+          formUsed: formData.residencyInfo?.formUsed ?? '',
         },
         incomeInfo: formData.incomeInfo,
       }

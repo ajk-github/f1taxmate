@@ -18,6 +18,20 @@ export default function Step3ResidencyInfo({
   onNext,
   onPrevious,
 }: Step3ResidencyInfoProps) {
+  const parseDateLocal = (dateString: string): Date | null => {
+    if (!dateString) return null
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateString.trim())
+    if (!m) {
+      const d = new Date(dateString)
+      return isNaN(d.getTime()) ? null : d
+    }
+    const year = Number(m[1])
+    const monthIndex = Number(m[2]) - 1
+    const day = Number(m[3])
+    const d = new Date(year, monthIndex, day)
+    return isNaN(d.getTime()) ? null : d
+  }
+
   const [formData, setFormData] = useState<ResidencyInfo>({
     dateOfFirstVisit: data?.dateOfFirstVisit ?? '',
     visits:
@@ -30,7 +44,7 @@ export default function Step3ResidencyInfo({
   })
 
   const [firstVisitDate, setFirstVisitDate] = useState<Date | null>(
-    formData.dateOfFirstVisit ? new Date(formData.dateOfFirstVisit) : null
+    parseDateLocal(formData.dateOfFirstVisit)
   )
   const [isStillInUS, setIsStillInUS] = useState(false)
   const formDataRef = useRef(formData)
@@ -106,7 +120,7 @@ export default function Step3ResidencyInfo({
   }
 
   const getVisitDate = (dateString: string): Date | null => {
-    return dateString ? new Date(dateString) : null
+    return parseDateLocal(dateString)
   }
 
   return (
@@ -394,10 +408,15 @@ export default function Step3ResidencyInfo({
                 <input
                   type="text"
                   inputMode="numeric"
+                  maxLength={4}
+                  pattern="\d{4}"
                   placeholder="e.g. 2024"
                   value={formData.yearFiled ?? ''}
                   onChange={(e) =>
-                    setFormData({ ...formData, yearFiled: e.target.value })
+                    setFormData({
+                      ...formData,
+                      yearFiled: e.target.value.replace(/\D/g, '').slice(0, 4),
+                    })
                   }
                   required
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg bg-white text-slate-900 focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent"

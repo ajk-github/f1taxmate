@@ -20,17 +20,20 @@ export function calculateDaysInUSForYear(
   year: number
 ): number {
   let totalDays = 0
-  const taxYearStart = new Date(`${year}-01-01`)
-  const taxYearEnd = new Date(`${year}-12-31`)
+  // Use a midday local time anchor to avoid timezone shifting YYYY-MM-DD to the previous day.
+  const taxYearStart = new Date(`${year}-01-01T12:00:00`)
+  const taxYearEnd = new Date(`${year}-12-31T12:00:00`)
 
   // Process all visits
   residencyInfo.visits.forEach((visit) => {
     if (visit.entryDate) {
-      const entry = new Date(visit.entryDate)
+      const entry = new Date(visit.entryDate.replace(/^(\d{4})-(\d{2})-(\d{2})$/, '$1-$2-$3T12:00:00'))
       entry.setHours(0, 0, 0, 0) // Normalize to start of day
       
       // If no exit date, assume still in US (use end of tax year or today, whichever is earlier)
-      const exit = visit.exitDate ? new Date(visit.exitDate) : (new Date() < taxYearEnd ? new Date() : taxYearEnd)
+      const exit = visit.exitDate
+        ? new Date(visit.exitDate.replace(/^(\d{4})-(\d{2})-(\d{2})$/, '$1-$2-$3T12:00:00'))
+        : (new Date() < taxYearEnd ? new Date() : taxYearEnd)
       exit.setHours(0, 0, 0, 0) // Normalize to start of day
 
       // Only count days within the tax year

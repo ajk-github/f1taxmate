@@ -130,7 +130,9 @@ I have not received any reimbursement from my employer for these amounts. I have
 
   // Signature block
   setTextField(pdf, `${P2}.f2_4[0]`, fullName)
-  setTextField(pdf, `${P2}.f2_5[0]`, formatDateForPDF(new Date().toISOString().slice(0, 10)))
+  const today = new Date()
+  const todayLocal = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+  setTextField(pdf, `${P2}.f2_5[0]`, formatDateForPDF(todayLocal))
   setTextField(pdf, `${P2}.f2_6[0]`, '')  // IP PIN — leave empty
 
   return await getPDFAsArrayBuffer(pdf)

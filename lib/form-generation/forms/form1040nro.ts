@@ -35,11 +35,13 @@ function get2025EntryExitDates(visits: Visit[]): { entryDate: string; exitDate: 
 
   for (const visit of visits) {
     if (!visit.entryDate) continue
-    const entry = new Date(visit.entryDate)
+    const entry = new Date(visit.entryDate.replace(/^(\d{4})-(\d{2})-(\d{2})$/, '$1-$2-$3T12:00:00'))
     entry.setHours(0, 0, 0, 0)
     // Visit must overlap 2025
     if (entry > yEnd) continue
-    const exit = visit.exitDate ? new Date(visit.exitDate) : null
+    const exit = visit.exitDate
+      ? new Date(visit.exitDate.replace(/^(\d{4})-(\d{2})-(\d{2})$/, '$1-$2-$3T12:00:00'))
+      : null
     if (exit) exit.setHours(0, 0, 0, 0)
     if (exit !== null && exit < yStart) continue
 
@@ -144,8 +146,15 @@ export async function fillForm1040NRO(formData: FormData): Promise<ArrayBuffer> 
   setCheckboxField(pdf, `${P}.c1_6[1]`, !hasFiledBefore)     // No
 
   // 38: Tax year and form filed — e.g. "2024, 1040NR"
-  if (hasFiledBefore && residency?.yearFiled && residency?.formUsed) {
-    setTextField(pdf, `${P}.f1_26[0]`, `${residency.yearFiled}, ${residency.formUsed}`)
+  const yearFiled = (residency?.yearFiled ?? '').trim()
+  const formUsed = (residency?.formUsed ?? '').trim()
+  const formUsedNormalized = (formUsed || '1040-NR').replace('-', '')
+  const yearFiledDigits = yearFiled.replace(/\D/g, '')
+  if (hasFiledBefore && yearFiledDigits.length === 4) {
+    setTextField(pdf, `${P}.f1_26[0]`, `${yearFiledDigits}, ${formUsedNormalized}`)
+  } else {
+    // Ensure this line is blank when user answered "No"
+    setTextField(pdf, `${P}.f1_26[0]`, '')
   }
 
   // 39–40: c1_7 — Check No

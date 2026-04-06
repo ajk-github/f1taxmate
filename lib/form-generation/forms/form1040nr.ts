@@ -50,16 +50,14 @@ export async function fillForm1040NR(
   // Field 20: State
   setTextField(pdf, 'topmostSubform[0].Page1[0].f1_20[0]', formData.personalInfo.usAddress.state)
   
-  // Filing Status: this app only supports "Other single nonresident alien".
-  // Tick the "Single" filing status checkbox by trying common field names.
-  const filingStatusSingleFieldNames = [
-    'topmostSubform[0].Page1[0].c1_01[0]',
-    'c1_01[0]',
-    'FilingStatus[0]',
-  ]
-  for (const fieldName of filingStatusSingleFieldNames) {
-    setCheckboxField(pdf, fieldName, true)
-  }
+  // Filing Status: this app only supports Single.
+  // In the IRS 1040-NR PDF, filing status is the checkbox group c1_5[0..4] on Page 1.
+  // [0] is Single, then the others are MFS, QSS, Estate, Trust.
+  setCheckboxField(pdf, 'topmostSubform[0].Page1[0].c1_5[0]', true)  // Single
+  setCheckboxField(pdf, 'topmostSubform[0].Page1[0].c1_5[1]', false) // MFS
+  setCheckboxField(pdf, 'topmostSubform[0].Page1[0].c1_5[2]', false) // QSS
+  setCheckboxField(pdf, 'topmostSubform[0].Page1[0].c1_5[3]', false) // Estate
+  setCheckboxField(pdf, 'topmostSubform[0].Page1[0].c1_5[4]', false) // Trust
   
   // Field 21: Zip Code
   setTextField(pdf, 'topmostSubform[0].Page1[0].f1_21[0]', formData.personalInfo.usAddress.zipCode)
